@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contactNumber = $_POST['contactNumber'];
 
     // Check if the email already exists
-    $checkEmailQuery = "SELECT * FROM user WHERE email = ?";
+    $checkEmailQuery = "SELECT * FROM user WHERE mail = ?";
     $stmt = $conn->prepare($checkEmailQuery);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -23,12 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Email is already registered!";
     } else {
         // Insert new user into the database
-        $insertQuery = "INSERT INTO user (name, email, contactNumber) VALUES (?, ?, ?)";
+        $insertQuery = "INSERT INTO user (name, mail, phone) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
         $stmt->bind_param("sss", $username, $email, $contactNumber);
 
         if ($stmt->execute()) {
             $success = "Signup successful! You can now log in.";
+            header('Location: success.php');
+            sleep(5);
+            header('Location: index.php');
+            
         } else {
             $error = "Error: " . $stmt->error;
         }

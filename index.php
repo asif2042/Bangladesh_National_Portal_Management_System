@@ -9,7 +9,7 @@ $logged_in_admin = null;
 // Check session for logged-in user or admin
 if (isset($_SESSION['user_email'])) {
     $email = $_SESSION['user_email'];
-    $sql = "SELECT * FROM user WHERE email = ?";
+    $sql = "SELECT * FROM user WHERE mail = ?"; // Updated 'email' to 'mail'
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -19,7 +19,7 @@ if (isset($_SESSION['user_email'])) {
     }
 } elseif (isset($_SESSION['admin_id'])) {
     $admin_id = $_SESSION['admin_id'];
-    $sql = "SELECT * FROM admin WHERE adminId = ?";
+    $sql = "SELECT * FROM admin WHERE adminId = ?"; // Admin logic is unchanged
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $admin_id);
     $stmt->execute();
@@ -41,7 +41,9 @@ if (isset($_SESSION['user_email'])) {
 </head>
 <body>
 <header>
-    <div class="navbar">
+
+
+<div class="navbar">
         <div class="nav_logo border">
             <div class="logo"></div>
         </div>
@@ -60,17 +62,17 @@ if (isset($_SESSION['user_email'])) {
         <?php if ($logged_in_user): ?>
             <p class="login-">
                 <span class="user-name"><?= $logged_in_user['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_user['email'] ?></span>
+                <span class="user-email"><?= $logged_in_user['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
             </p>
         <?php elseif ($logged_in_admin): ?>
             <p class="login-">
                 <span class="user-name"><?= $logged_in_admin['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_admin['email'] ?></span>
+                <span class="user-email"><?= $logged_in_admin['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
             </p>
         <?php else: ?>
             <a href="login.php">Login</a>
         <?php endif; ?>
-      </div>
+        </div>
 
         <div class="nav-second border">
             <p><span>Date</span></p>
@@ -78,59 +80,121 @@ if (isset($_SESSION['user_email'])) {
         </div>
     </div>
 
-     <div class="panel">
+    
+   
 
-     
-    <!-- Hamburger icon (panel-all) -->
-    <div class="panel-all">
-        <i class="fa-solid fa-bars"></i>
-    </div>
+    </header>
 
-    <!-- //dfjdkjfdk -->
+   <div class="app">
+		<div class="menu-toggle">
+			<div class="hamburger">
+				<span></span>
+			</div>
+		</div>
+		<aside class="sidebar">
+			<h3>Menu</h3>
+			
+			<nav class="menu">
+				<a href="#" class="menu-item is-active home">Home</a>
+                <a href="#" class="menu-item profile">Profile</a>
+				<a href="#" class="menu-item about">About</a>			
+				<a href="#" class="menu-item contact">Contact</a>
+                <a href="#" class="menu-item log-out">Log out</a>
+			</nav>
 
+		</aside>
 
-
-
-        <div class="panel-ops">
-            <p>Home</p>
-            <p>About Bangladesh</p>
-            <p>e-Service</p>
-            <p>Notification</p>
-            <p>Forms</p>
+		<main class="content">
+           <div class = 'panel'>   
+                <div class="panel-ops">
+                    <p class = 'education'>Education</p>
+                    <p class="health">Health</p>
+                    <p class="agriculture">Agriculture</p>
+                    <p class="finance">Finance</p>
+                    <p class="transport">Transport</p>
+                </div>
+                 <div class="panel-logo border">
+                    <div class="panel-logo-link"></div>
+                </div>        
+            </div>
+                        
+		<div class="hero-section">
+            <div class="hero-message">
+                <p>You are on Bangladesh National Portal <a href="https://bangladesh.gov.bd">Click here to go to bangladesh.gov.bd</a></p>
+            </div>
         </div>
 
-        <div class="panel-logo border">
-            <div class="panel-logo-link"></div>
+        <div class="shop-section">
+            <div class="box1 box">
+                <div class="box-content">
+                    <h2>Education</h2>
+                    <div class="box-img" style="background-image: url('picture/education.png');"></div>
+                 
+                </div>
+            </div>
+            <div class="box2 box">
+                 <h2>Health</h2>
+                <div class="box-img" style="background-image: url('picture/health.png');"></div>
+            
+              
+            </div>
+            <div class="box3 box">
+                <h2>Agriculture</h2>
+                <div class="box-img" style="background-image: url('picture/agriculture.png');"></div>
+            </div>
+            <div class="box4 box">
+                <h2>Finance</h2>
+                <div class="box-img" style="background-image: url('picture/finance.png');"></div>
+            </div>
+            <div class="box4 box">
+                <h2>Transport</h2>
+                <div class="box-img" style="background-image: url('picture/transport.png');"></div>
+            </div>
         </div>
-    </div>
-</header>
 
-<div class="hero-section">
-    <div class="hero-message">
-        <p>You are on Bangladesh National Portal <a>Click here to go to bangladesh.gov.bd</a></p>
-    </div>
+        
+
+
+		</main>
+
+	</div>
+
+<!-- footer -->
+ <div class="footer-body">
+    <footer class="footer">
+  	 <div class="container">
+  	 	<div class="row">
+  	 		<div class="footer-col">
+  	 			<h4>Quick Access</h4>
+  	 			<ul> 				
+  	 				<li><a href="#">our services</a></li>
+  	 				
+  	 			
+  	 			</ul>
+  	 		</div>
+  	 		<div class="footer-col">
+  	 			<h4>get help</h4>
+  	 			<ul>
+                   <li><a href="#">privacy policy</a></li>
+  	 				
+  	 			</ul>
+  	 		</div>
+  	 		
+  	 		<div class="footer-col">
+  	 			<h4>follow us</h4>
+  	 			<div class="social-links">
+  	 				<a href="#"><i class="fab fa-facebook-f"></i></a>
+  	 				<a href="#"><i class="fab fa-twitter"></i></a>	 			 				
+  	 			</div>
+  	 		</div>
+  	 	</div>
+  	 </div>
+  </footer>
+
+   
+
 </div>
 
-<div class="shop-section">
-    <div class="box1 box">
-        <div class="box-content">
-            <h2>Service</h2>
-            <div class="box-img" style="background-image: url('service-logo.png');"></div>
-            <p>See more</p>
-        </div>
-    </div>
-    <div class="box2 box">
-        <h2>Service</h2>
-        <div class="box-img" style="background-image: url('service-logo.png');"></div>
-        <p>See more</p>
-    </div>
-    <div class="box3 box">box3</div>
-    <div class="box4 box">box4</div>
-</div>
-
-<div class="nav-signin border">
-    <p><a href="signup.php">Sign Up</a></p>
-</div>
 
 <script src="script.js"></script>
 </body>

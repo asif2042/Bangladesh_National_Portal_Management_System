@@ -7,15 +7,15 @@ date_default_timezone_set('Asia/Dhaka');
 
 session_start();
 
-// Variables for errors and login display
+// Variables for errors
 $user_error = $admin_error = "";
 $logged_in_user = null;
 $logged_in_admin = null;
 
-// Check session for logged-in user/admin
+// Handle session data for logged-in user or admin
 if (isset($_SESSION['user_email'])) {
     $email = $_SESSION['user_email'];
-    $sql = "SELECT * FROM user WHERE email = ?";
+    $sql = "SELECT * FROM user WHERE mail = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // User login form submission
         $email = trim($_POST['email']);
         if (!empty($email)) {
-            $sql = "SELECT * FROM user WHERE email = ?";
+            $sql = "SELECT * FROM user WHERE mail = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -50,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result->num_rows > 0) {
                 $_SESSION['user_email'] = $email;
                 $user_data = $result->fetch_assoc();
-                $user_id = $user_data['userId'];
+                $user_id = $user_data['user_id']; // Updated column name
                 $login_datetime = date("Y-m-d H:i:s");
                 $login_type = 'user';
 
                 // Insert login log
-                $log_sql = "INSERT INTO login_log (user_id, email, login_datetime, login_type) VALUES (?, ?, ?, ?)";
+                $log_sql = "INSERT INTO login_log (user_id, mail, login_datetime, login_type) VALUES (?, ?, ?, ?)";
                 $log_stmt = $conn->prepare($log_sql);
                 $log_stmt->bind_param("isss", $user_id, $email, $login_datetime, $login_type);
                 $log_stmt->execute();
@@ -83,13 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result->num_rows > 0) {
                 $admin_data = $result->fetch_assoc();
                 $_SESSION['admin_id'] = $admin_data['adminId'];
+                $admin_id = $admin_data['adminId'];
                 $login_datetime = date("Y-m-d H:i:s");
                 $login_type = 'admin';
 
                 // Insert login log
-                $log_sql = "INSERT INTO login_log (admin_id, email, login_datetime, login_type) VALUES (?, ?, ?, ?)";
+                $log_sql = "INSERT INTO login_log (admin_id, mail, login_datetime, login_type) VALUES (?, ?, ?, ?)";
                 $log_stmt = $conn->prepare($log_sql);
-                $log_stmt->bind_param("isss", $admin_data['adminId'], $admin_mail, $login_datetime, $login_type);
+                $log_stmt->bind_param("isss", $admin_id, $admin_mail, $login_datetime, $login_type);
                 $log_stmt->execute();
 
                 header('Location: index.php');
@@ -103,8 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
