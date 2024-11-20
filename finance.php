@@ -1,6 +1,9 @@
-<?php
+
+
+<?php 
 include 'config.php';
 session_start();
+
 
 // Initialize variables to avoid undefined errors
 $logged_in_user = null;
@@ -28,7 +31,37 @@ if (isset($_SESSION['user_email'])) {
         $logged_in_admin = $result->fetch_assoc();
     }
 }
+
+
+// Fetch services data dynamically for the "Education" sector
+$query = "
+    SELECT 
+        service.service_name, 
+        service_sector.sector_name, 
+        service_sector.description AS sector_description, 
+        helpline.phone 
+    FROM 
+        service 
+    JOIN 
+        service_sector 
+        ON service.sector_id = service_sector.sector_id 
+   left JOIN 
+        helpline 
+        ON service.service_id = helpline.service_id 
+       where service_sector.sector_name = 'Finance'
+
+   
+";
+$result = $conn->query($query);
+$services = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $services[] = $row;
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,24 +80,16 @@ if (isset($_SESSION['user_email'])) {
         <div class="nav_logo border">
             <div class="logo"></div>
         </div>
-        
-
-
 
         <div class="nav-search">
-    <select class="search-select">
-        <option>All</option>
-    </select>
-    <input placeholder="Search Bangladesh National Portal" class="search-input" id="search-input">
-    <div class="search-icon">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </div>
-    <div id="search-results" class="search-results"></div>
-</div>
-
-
-
-
+            <select class="search-select">
+                <option>All</option>
+            </select>
+            <input placeholder="Search Bangladesh National Portal" class="search-input">
+            <div class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
 
         <div class="nav-signin border">
         <?php if ($logged_in_user): ?>
@@ -135,42 +160,60 @@ if (isset($_SESSION['user_email'])) {
                 <div class="panel-logo border">
                     <div class="panel-logo-link"></div>
                 </div>        
+         </div>
+
+
+
+            <div class="service-body">
+
+
+
+
+
+
+
+                <div class="app">
+                    <main class="content">
+                        <h2>Education Services</h2>
+                        <div class="service-container">
+                            <?php if (!empty($services)): ?>
+                                <?php foreach ($services as $service): ?>
+                                    <div class="service-box">
+                                        <nav class="service-nav">
+                                            <div class="service-item">Service: <?= $service['service_name']; ?></div>
+                                            <div class="service-item">
+                                                <div>Category: <?= $service['sector_name']; ?></div>
+                                                <div>Description: <?= $service['sector_description']; ?></div>
+                                            </div>
+                                            <div class="service-item">
+                                                Need help? Call - <?= $service['phone']; ?>
+                                            </div>
+                                            <div class="service-item">
+                                                <a href="form.php" class="apply-btn">Apply</a>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>No services available for the Education sector at the moment.</p>
+                            <?php endif; ?>
+                        </div>
+                    </main>
+                </div>
+
+
+
+
+
+
+           
+
+
             </div>
                         
-		<div class="hero-section">
-            <div class="hero-message">
-                <p>You are on Bangladesh National Portal <a href="https://bangladesh.gov.bd">Click here to go to bangladesh.gov.bd</a></p>
-            </div>
-        </div>
+		
 
-        <div class="shop-section">
-            <div class="box1 box">
-                <div class="box-content">
-                    <h2>Education</h2>
-                    <div class="box-img" style="background-image: url('picture/education.png');"></div>
-                 
-                </div>
-            </div>
-            <div class="box2 box">
-                 <h2>Health</h2>
-                <div class="box-img" style="background-image: url('picture/health.png');"></div>
-            
-              
-            </div>
-            <div class="box3 box">
-                <h2>Agriculture</h2>
-                <div class="box-img" style="background-image: url('picture/agriculture.png');"></div>
-            </div>
-            <div class="box4 box">
-                <h2>Finance</h2>
-                <div class="box-img" style="background-image: url('picture/finance.png');"></div>
-            </div>
-            <div class="box4 box">
-                <h2>Transport</h2>
-                <div class="box-img" style="background-image: url('picture/transport.png');"></div>
-            </div>
-        </div>
-
+        
         
 
 

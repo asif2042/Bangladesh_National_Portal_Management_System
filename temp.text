@@ -1,0 +1,31 @@
+<?php
+include 'config.php';
+session_start();
+
+// Initialize variables to avoid undefined errors
+$logged_in_user = null;
+$logged_in_admin = null;
+
+// Check session for logged-in user or admin
+if (isset($_SESSION['user_email'])) {
+    $email = $_SESSION['user_email'];
+    $sql = "SELECT * FROM user WHERE mail = ?"; // Updated 'email' to 'mail'
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $logged_in_user = $result->fetch_assoc();
+    }
+} elseif (isset($_SESSION['admin_id'])) {
+    $admin_id = $_SESSION['admin_id'];
+    $sql = "SELECT * FROM admin WHERE adminId = ?"; // Admin logic is unchanged
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $logged_in_admin = $result->fetch_assoc();
+    }
+}
+?>

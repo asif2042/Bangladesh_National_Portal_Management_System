@@ -8,7 +8,7 @@
 $host = 'localhost';
 $username = 'root'; // Replace with your MySQL username
 $password = '';     // Replace with your MySQL password
-$dbname = 'national_portal';     // Database name
+$dbname = 'bangladesh_national_portal';     // Database name
 
 // Create connection
 $conn = new mysqli($host, $username, $password, $dbname);

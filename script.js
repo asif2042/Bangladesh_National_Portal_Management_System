@@ -58,3 +58,51 @@ document.addEventListener('DOMContentLoaded', () => {
 			menu_toggle.classList.toggle('is-active');
 			sidebar.classList.toggle('is-active');
 		});
+
+
+
+
+
+
+  // application form 
+  
+
+
+  //for searching 
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+
+        if (query === "") {
+            searchResults.classList.remove('active');
+            searchResults.innerHTML = '<p class="empty-message">Empty</p>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`search_service.php?query=${query}`);
+            const services = await response.json();
+
+            if (services.length > 0) {
+                const listItems = services.map(service => `<li>${service}</li>`).join('');
+                searchResults.innerHTML = `<ul>${listItems}</ul>`;
+            } else {
+                searchResults.innerHTML = '<p class="empty-message">No matching services</p>';
+            }
+
+            searchResults.classList.add('active');
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+
+    // Hide results when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!searchResults.contains(event.target) && event.target !== searchInput) {
+            searchResults.classList.remove('active');
+        }
+    });
+});

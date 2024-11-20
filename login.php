@@ -1,3 +1,4 @@
+
 <?php
 // Include database configuration
 include 'config.php';
@@ -11,6 +12,7 @@ session_start();
 $user_error = $admin_error = "";
 $logged_in_user = null;
 $logged_in_admin = null;
+$_SESSION['global_user_id'] = null;
 
 // Handle session data for logged-in user or admin
 if (isset($_SESSION['user_email'])) {
@@ -25,7 +27,7 @@ if (isset($_SESSION['user_email'])) {
     }
 } elseif (isset($_SESSION['admin_id'])) {
     $admin_id = $_SESSION['admin_id'];
-    $sql = "SELECT * FROM admin WHERE adminId = ?";
+    $sql = "SELECT * FROM admin WHERE admin_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $admin_id);
     $stmt->execute();
@@ -48,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $result = $stmt->get_result();
 
             if ($result->num_rows > 0) {
-                $_SESSION['user_email'] = $email;
                 $user_data = $result->fetch_assoc();
-                $user_id = $user_data['user_id']; // Updated column name
+                $_SESSION['user_email'] = $email;
+                $user_id = $user_data['user_id'];
                 $login_datetime = date("Y-m-d H:i:s");
                 $login_type = 'user';
 
@@ -59,6 +61,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $log_stmt = $conn->prepare($log_sql);
                 $log_stmt->bind_param("isss", $user_id, $email, $login_datetime, $login_type);
                 $log_stmt->execute();
+
+
+
+                // Query to fetch user_id from user table
+                $user_id_sql = "SELECT user_id FROM user WHERE mail = ?";
+                $user_id_stmt = $conn->prepare($user_id_sql);
+                $user_id_stmt->bind_param("s", $email);
+                $user_id_stmt->execute();
+                $user_id_result = $user_id_stmt->get_result();
+
+                // Check if the user_id was found and set it to the session variable
+                if ($user_id_result->num_rows > 0) {
+                    $row = $user_id_result->fetch_assoc();
+                    $_SESSION['global_user_id'] = $row['user_id'];
+                   
+                } else {
+                    // Handle the case where no user_id is found
+                    echo "<script>alert('Error: Unable to retrieve user ID.');</script>";
+                }
+
 
                 header('Location: index.php');
                 exit();
@@ -74,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $admin_password = trim($_POST['admin_password']);
 
         if (!empty($admin_mail) && !empty($admin_password)) {
-            $sql = "SELECT * FROM admin WHERE mail = ? AND admin_password = ?";
+            $sql = "SELECT * FROM admin WHERE mail = ? AND password = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ss", $admin_mail, $admin_password);
             $stmt->execute();
@@ -82,8 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($result->num_rows > 0) {
                 $admin_data = $result->fetch_assoc();
-                $_SESSION['admin_id'] = $admin_data['adminId'];
-                $admin_id = $admin_data['adminId'];
+                $_SESSION['admin_id'] = $admin_data['admin_id'];
+                $admin_id = $admin_data['admin_id'];
                 $login_datetime = date("Y-m-d H:i:s");
                 $login_type = 'admin';
 

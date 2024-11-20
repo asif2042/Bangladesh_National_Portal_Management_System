@@ -47,24 +47,16 @@ if (isset($_SESSION['user_email'])) {
         <div class="nav_logo border">
             <div class="logo"></div>
         </div>
-        
-
-
 
         <div class="nav-search">
-    <select class="search-select">
-        <option>All</option>
-    </select>
-    <input placeholder="Search Bangladesh National Portal" class="search-input" id="search-input">
-    <div class="search-icon">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </div>
-    <div id="search-results" class="search-results"></div>
-</div>
-
-
-
-
+            <select class="search-select">
+                <option>All</option>
+            </select>
+            <input placeholder="Search Bangladesh National Portal" class="search-input">
+            <div class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
 
         <div class="nav-signin border">
         <?php if ($logged_in_user): ?>
@@ -137,40 +129,7 @@ if (isset($_SESSION['user_email'])) {
                 </div>        
             </div>
                         
-		<div class="hero-section">
-            <div class="hero-message">
-                <p>You are on Bangladesh National Portal <a href="https://bangladesh.gov.bd">Click here to go to bangladesh.gov.bd</a></p>
-            </div>
-        </div>
-
-        <div class="shop-section">
-            <div class="box1 box">
-                <div class="box-content">
-                    <h2>Education</h2>
-                    <div class="box-img" style="background-image: url('picture/education.png');"></div>
-                 
-                </div>
-            </div>
-            <div class="box2 box">
-                 <h2>Health</h2>
-                <div class="box-img" style="background-image: url('picture/health.png');"></div>
-            
-              
-            </div>
-            <div class="box3 box">
-                <h2>Agriculture</h2>
-                <div class="box-img" style="background-image: url('picture/agriculture.png');"></div>
-            </div>
-            <div class="box4 box">
-                <h2>Finance</h2>
-                <div class="box-img" style="background-image: url('picture/finance.png');"></div>
-            </div>
-            <div class="box4 box">
-                <h2>Transport</h2>
-                <div class="box-img" style="background-image: url('picture/transport.png');"></div>
-            </div>
-        </div>
-
+		
         
 
 
