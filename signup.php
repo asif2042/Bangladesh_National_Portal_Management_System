@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt->execute()) {
             $success = "Signup successful! You can now log in.";
             header('Location: success.php');
-            sleep(5);
+           
             header('Location: index.php');
             
         } else {

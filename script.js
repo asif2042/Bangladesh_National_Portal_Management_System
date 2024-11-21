@@ -69,40 +69,155 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //for searching 
-  document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search-input');
+  const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
-    searchInput.addEventListener('input', async (e) => {
+    searchBar.addEventListener('input', async (e) => {
         const query = e.target.value.trim();
 
-        if (query === "") {
-            searchResults.classList.remove('active');
-            searchResults.innerHTML = '<p class="empty-message">Empty</p>';
-            return;
-        }
+        if (query.length > 0) {
+            try {
+                const response = await fetch(`search.php?query=${encodeURIComponent(query)}`);
+                const results = await response.json();
 
-        try {
-            const response = await fetch(`search_service.php?query=${query}`);
-            const services = await response.json();
+                searchResults.innerHTML = ''; // Clear previous results
 
-            if (services.length > 0) {
-                const listItems = services.map(service => `<li>${service}</li>`).join('');
-                searchResults.innerHTML = `<ul>${listItems}</ul>`;
-            } else {
-                searchResults.innerHTML = '<p class="empty-message">No matching services</p>';
+                if (results.length > 0) {
+                    results.forEach(item => {
+                        const resultItem = document.createElement('p');
+                        resultItem.textContent = item;
+                        resultItem.addEventListener('click', () => {
+                            searchBar.value = item;
+                            searchResults.innerHTML = '';
+                            searchResults.classList.remove('show');
+                        });
+                        searchResults.appendChild(resultItem);
+                    });
+                } else {
+                    searchResults.innerHTML = '<p>No results found</p>';
+                }
+
+                searchResults.classList.add('show');
+            } catch (error) {
+                console.error('Error fetching search results:', error);
             }
-
-            searchResults.classList.add('active');
-        } catch (error) {
-            console.error('Error fetching search results:', error);
+        } else {
+            searchResults.innerHTML = '';
+            searchResults.classList.remove('show');
         }
     });
 
-    // Hide results when clicking outside
-    document.addEventListener('click', (event) => {
-        if (!searchResults.contains(event.target) && event.target !== searchInput) {
-            searchResults.classList.remove('active');
+    document.addEventListener('click', (e) => {
+        if (!searchBar.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.innerHTML = '';
+            searchResults.classList.remove('show');
         }
     });
+
+
+
+
+
+    // admin - user management panel
+
+
+
+    $(document).ready(function () {
+        $('#userTable').DataTable();
+    });
+    
+    function openModal(mode) {
+        document.getElementById('userModal').style.display = 'block';
+        if (mode === 'add') {
+            document.getElementById('modal-title').innerText = 'Add New User';
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+        }
+    }
+    
+    function closeModal() {
+        document.getElementById('userModal').style.display = 'none';
+    }
+    
+    function editRecord(record) {
+    // Ensure 'record' contains the necessary data
+    console.log(record); // Debug to check if 'review' is being passed correctly
+    
+    // Set values in the modal form
+    document.getElementById('userId').value = record.applicant_id || '';
+    document.getElementById('name').value = record.name || '';
+    document.getElementById('mail').value = record.mail || '';
+    document.getElementById('phone').value = record.phone || '';
+    document.getElementById('feedback_comments').value = record.review || ''; // Populate the feedback comments
+    document.getElementById('application_status').value = record.application_status || 'Pending';
+
+    // Open the modal
+    openModal('edit');
+}
+
+
+   
+
+
+    function handleResponse(response) {
+        if (response.success) {
+            alert(response.message);
+            location.reload(); // Reload the page to reflect changes
+        } else {
+            alert(response.message);
+        }
+    }
+    
+    function sendRequest(url, formData) {
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => handleResponse(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+
+    document.getElementById("userForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default form submission
+
+    // Get form data
+    const applicantId = document.getElementById("userId").value;
+    const applicationStatus = document.getElementById("application_status").value;
+
+    // Validate data
+    if (!applicantId || !applicationStatus) {
+        alert("Applicant ID and Application Status are required.");
+        return;
+    }
+
+    // Send data to the server
+    const formData = new URLSearchParams();
+    formData.append("applicant_id", applicantId);
+    formData.append("application_status", applicationStatus);
+
+    fetch("update_status.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert(data.success); // Success message
+                location.reload();   // Reload the page to reflect changes
+            } else {
+                alert(data.error);   // Error message
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("An unexpected error occurred.");
+        });
 });
+
+
+

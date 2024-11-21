@@ -1,20 +1,22 @@
 <?php
-// search_service.php
 include 'config.php';
 
 if (isset($_GET['query'])) {
     $query = $_GET['query'];
-    $sql = "SELECT name FROM services WHERE name LIKE ? LIMIT 10";
+    $query = $query . '%';
+
+    $sql = "SELECT service_name FROM service WHERE service_name LIKE ? ORDER BY service_name ASC LIMIT 10";
     $stmt = $conn->prepare($sql);
-    $searchTerm = "%" . $query . "%";
-    $stmt->bind_param("s", $searchTerm);
+    $stmt->bind_param("s", $query);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     $services = [];
     while ($row = $result->fetch_assoc()) {
-        $services[] = $row['name'];
+        $services[] = $row['service_name'];
     }
+
     echo json_encode($services);
+    exit;
 }
 ?>

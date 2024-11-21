@@ -132,14 +132,29 @@ if (isset($_SESSION['user_email'])) {
            <?php
             $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
             ?>
-            <div class="panel-ops">
-                <p class="<?= $currentPage == 'index' ? 'active' : '' ?>"><a href="index.php">Home</a></p>
-                <p class="<?= $currentPage == 'education' ? 'active' : '' ?>"><a href="education.php">Education</a></p>
-                <p class="<?= $currentPage == 'health' ? 'active' : '' ?>"><a href="health.php">Health</a></p>
-                <p class="<?= $currentPage == 'agriculture' ? 'active' : '' ?>"><a href="agriculture.php">Agriculture</a></p>
-                <p class="<?= $currentPage == 'finance' ? 'active' : '' ?>"><a href="finance.php">Finance</a></p>
-                <p class="<?= $currentPage == 'transport' ? 'active' : '' ?>"><a href="transport.php">Transport</a></p>
-            </div>
+
+
+
+<div class="panel-ops">
+    <p class="<?= $currentPage == 'admin_home' ? 'active' : '' ?>">
+        <a href="admin_home.php">Home</a>
+    </p>
+    <p class="<?= $currentPage == 'service' ? 'active' : '' ?>">
+        <a href="service.php">Service</a>
+    </p>
+    <p class="<?= $currentPage == 'user' ? 'active' : '' ?>">
+        <a href="user.php">User</a>
+    </p>
+    <p class="<?= $currentPage == 'applicant' ? 'active' : '' ?>">
+        <a href="applicant.php">Applicant</a>
+    </p>
+    <p class="<?= $currentPage == 'helpline' ? 'active' : '' ?>">
+        <a href="helpline.php">Helpline</a>
+    </p>
+    <p class="<?= $currentPage == 'feedback' ? 'active' : '' ?>">
+        <a href="feedback.php">User Feedback</a>
+    </p>
+</div>
 
 
 

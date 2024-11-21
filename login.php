@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $log_stmt->bind_param("isss", $admin_id, $admin_mail, $login_datetime, $login_type);
                 $log_stmt->execute();
 
-                header('Location: index.php');
+                header('Location: admin_home.php');
                 exit();
             } else {
                 $admin_error = "Invalid Admin Email or Password!";
