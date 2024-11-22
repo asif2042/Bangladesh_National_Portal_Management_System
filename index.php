@@ -77,22 +77,26 @@ if (isset($_SESSION['user_email'])) {
 
 
 
+    <div class="nav-signin border">
+    <?php if ($logged_in_user): ?>
+        <a href="profile.php?user_id=<?= htmlspecialchars($logged_in_user['user_id']) ?>" class="profile-link">
+            <p class="login-">
+                <span class="user-name"><?= htmlspecialchars($logged_in_user['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_user['mail']) ?></span>
+            </p>
+        </a>
+    <?php elseif ($logged_in_admin): ?>
+        <a href="profile.php?admin_id=<?= htmlspecialchars($logged_in_admin['admin_id']) ?>" class="profile-link">
+            <p class="login-">
+                <span class="user-name"><?= htmlspecialchars($logged_in_admin['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_admin['mail']) ?></span>
+            </p>
+        </a>
+    <?php else: ?>
+        <a href="login.php">Login</a>
+    <?php endif; ?>
+  </div>
 
-        <div class="nav-signin border">
-        <?php if ($logged_in_user): ?>
-            <p class="login-">
-                <span class="user-name"><?= $logged_in_user['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_user['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
-            </p>
-        <?php elseif ($logged_in_admin): ?>
-            <p class="login-">
-                <span class="user-name"><?= $logged_in_admin['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_admin['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
-            </p>
-        <?php else: ?>
-            <a href="login.php">Login</a>
-        <?php endif; ?>
-        </div>
 
         <div class="nav-second border">
             <p><span>Date</span></p>
@@ -116,10 +120,19 @@ if (isset($_SESSION['user_email'])) {
 			
 			<nav class="menu">
 				<a href="#" class="menu-item is-active home">Home</a>
-                <a href="#" class="menu-item profile">Profile</a>
+                <!-- for profile -->
+                 <!-- Display Profile link for user -->
+        <?php if (isset($logged_in_user)): ?>
+            <a href="profile.php?user_id=<?= $logged_in_user['user_id'] ?>" class="menu-item profile">Profile</a>
+        
+        <!-- Display Profile link for admin -->
+        <?php elseif (isset($logged_in_admin)): ?>
+            <a href="profile.php?admin_id=<?= $logged_in_admin['admin_id'] ?>" class="menu-item profile">Profile</a>
+        <?php endif; ?>
 				<a href="#" class="menu-item about">About</a>			
 				<a href="#" class="menu-item contact">Contact</a>
-                <a href="#" class="menu-item log-out">Log out</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
 			</nav>
 
 		</aside>
@@ -133,12 +146,12 @@ if (isset($_SESSION['user_email'])) {
             $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
             ?>
             <div class="panel-ops">
-                <p class="<?= $currentPage == 'index' ? 'active' : '' ?>"><a href="index.php">Home</a></p>
-                <p class="<?= $currentPage == 'education' ? 'active' : '' ?>"><a href="education.php">Education</a></p>
-                <p class="<?= $currentPage == 'health' ? 'active' : '' ?>"><a href="health.php">Health</a></p>
-                <p class="<?= $currentPage == 'agriculture' ? 'active' : '' ?>"><a href="agriculture.php">Agriculture</a></p>
-                <p class="<?= $currentPage == 'finance' ? 'active' : '' ?>"><a href="finance.php">Finance</a></p>
-                <p class="<?= $currentPage == 'transport' ? 'active' : '' ?>"><a href="transport.php">Transport</a></p>
+                <p class="<?= $currentPage == 'index' ? 'active' : '' ?>"><a href="index.php", class="panel-menu">Home</a></p>
+                <p class="<?= $currentPage == 'education' ? 'active' : '' ?>"><a href="education.php", class="panel-menu">Education</a></p>
+                <p class="<?= $currentPage == 'health' ? 'active' : '' ?>"><a href="health.php", class="panel-menu">Health</a></p>
+                <p class="<?= $currentPage == 'agriculture' ? 'active' : '' ?>"><a href="agriculture.php", class="panel-menu">Agriculture</a></p>
+                <p class="<?= $currentPage == 'finance' ? 'active' : '' ?>"><a href="finance.php", class="panel-menu">Finance</a></p>
+                <p class="<?= $currentPage == 'transport' ? 'active' : '' ?>"><a href="transport.php", class="panel-menu">Transport</a></p>
             </div>
 
 

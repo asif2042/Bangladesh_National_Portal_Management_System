@@ -19,7 +19,7 @@ if (isset($_SESSION['user_email'])) {
     }
 } elseif (isset($_SESSION['admin_id'])) {
     $admin_id = $_SESSION['admin_id'];
-    $sql = "SELECT * FROM admin WHERE adminId = ?"; // Admin logic is unchanged
+    $sql = "SELECT * FROM admin WHERE admin_id = ?"; // Admin logic is unchanged
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $admin_id);
     $stmt->execute();
@@ -78,21 +78,25 @@ if (isset($_SESSION['user_email'])) {
 
 
 
-        <div class="nav-signin border">
-        <?php if ($logged_in_user): ?>
+    <div class="nav-signin border">
+    <?php if ($logged_in_user): ?>
+        <a href="profile.php?user_id=<?= htmlspecialchars($logged_in_user['user_id']) ?>" class="profile-link">
             <p class="login-">
-                <span class="user-name"><?= $logged_in_user['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_user['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
+                <span class="user-name"><?= htmlspecialchars($logged_in_user['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_user['mail']) ?></span>
             </p>
-        <?php elseif ($logged_in_admin): ?>
+        </a>
+    <?php elseif ($logged_in_admin): ?>
+        <a href="profile.php?admin_id=<?= htmlspecialchars($logged_in_admin['admin_id']) ?>" class="profile-link">
             <p class="login-">
-                <span class="user-name"><?= $logged_in_admin['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_admin['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
+                <span class="user-name"><?= htmlspecialchars($logged_in_admin['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_admin['mail']) ?></span>
             </p>
-        <?php else: ?>
-            <a href="login.php">Login</a>
-        <?php endif; ?>
-        </div>
+        </a>
+    <?php else: ?>
+        <a href="login.php">Login</a>
+    <?php endif; ?>
+</div>
 
         <div class="nav-second border">
             <p><span>Date</span></p>
@@ -116,10 +120,17 @@ if (isset($_SESSION['user_email'])) {
 			
 			<nav class="menu">
 				<a href="#" class="menu-item is-active home">Home</a>
-                <a href="#" class="menu-item profile">Profile</a>
+                <!-- for profile -->
+                <?php if (isset($user_id)): ?>
+                    <a href="profile.php?user_id=<?= $user_id ?>" class="menu-item profile">Profile</a>
+                <?php elseif (isset($admin_id)): ?>
+                    <a href="profile.php?admin_id=<?= $admin_id ?>" class="menu-item profile">Profile</a>
+                <?php endif; ?>
+
 				<a href="#" class="menu-item about">About</a>			
 				<a href="#" class="menu-item contact">Contact</a>
-                <a href="#" class="menu-item log-out">Log out</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
 			</nav>
 
 		</aside>
@@ -137,24 +148,22 @@ if (isset($_SESSION['user_email'])) {
 
 <div class="panel-ops">
     <p class="<?= $currentPage == 'admin_home' ? 'active' : '' ?>">
-        <a href="admin_home.php">Home</a>
+        <a href="admin_home.php" class="panel-menu">Home</a>
     </p>
     <p class="<?= $currentPage == 'service' ? 'active' : '' ?>">
-        <a href="service.php">Service</a>
+        <a href="service.php" class="panel-menu">Service</a>
     </p>
     <p class="<?= $currentPage == 'user' ? 'active' : '' ?>">
-        <a href="user.php">User</a>
+        <a href="user.php" class="panel-menu">User</a>
     </p>
     <p class="<?= $currentPage == 'applicant' ? 'active' : '' ?>">
-        <a href="applicant.php">Applicant</a>
-    </p>
-    <p class="<?= $currentPage == 'helpline' ? 'active' : '' ?>">
-        <a href="helpline.php">Helpline</a>
+        <a href="applicant.php" class="panel-menu">Applicant</a>
     </p>
     <p class="<?= $currentPage == 'feedback' ? 'active' : '' ?>">
-        <a href="feedback.php">User Feedback</a>
+        <a href="feedback.php" class="panel-menu">Feedback</a>
     </p>
 </div>
+
 
 
 

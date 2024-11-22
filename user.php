@@ -19,7 +19,7 @@ if (isset($_SESSION['user_email'])) {
     }
 } elseif (isset($_SESSION['admin_id'])) {
     $admin_id = $_SESSION['admin_id'];
-    $sql = "SELECT * FROM admin WHERE adminId = ?";
+    $sql = "SELECT * FROM admin WHERE admin_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $admin_id);
     $stmt->execute();
@@ -73,20 +73,25 @@ $result = $conn->query($sql);
             </div>
         </div>
         <div class="nav-signin border">
-            <?php if ($logged_in_user): ?>
-                <p class="login-">
-                    <span class="user-name"><?= $logged_in_user['name'] ?></span><br>
-                    <span class="user-email"><?= $logged_in_user['mail'] ?></span>
-                </p>
-            <?php elseif ($logged_in_admin): ?>
-                <p class="login-">
-                    <span class="user-name"><?= $logged_in_admin['name'] ?></span><br>
-                    <span class="user-email"><?= $logged_in_admin['mail'] ?></span>
-                </p>
-            <?php else: ?>
-                <a href="login.php">Login</a>
-            <?php endif; ?>
-        </div>
+    <?php if ($logged_in_user): ?>
+        <a href="profile.php?user_id=<?= htmlspecialchars($logged_in_user['user_id']) ?>" class="profile-link">
+            <p class="login-">
+                <span class="user-name"><?= htmlspecialchars($logged_in_user['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_user['mail']) ?></span>
+            </p>
+        </a>
+    <?php elseif ($logged_in_admin): ?>
+        <a href="profile.php?admin_id=<?= htmlspecialchars($logged_in_admin['admin_id']) ?>" class="profile-link">
+            <p class="login-">
+                <span class="user-name"><?= htmlspecialchars($logged_in_admin['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_admin['mail']) ?></span>
+            </p>
+        </a>
+    <?php else: ?>
+        <a href="login.php">Login</a>
+    <?php endif; ?>
+  </div>
+
         <div class="nav-second border">
             <p><span>Date</span></p>
             <p class="nav-second" id="datetime">Loading...</p>
@@ -116,27 +121,24 @@ $result = $conn->query($sql);
             <?php
             $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
             ?>
-            <div class="panel-ops">
-                <p class="<?= $currentPage == 'admin_home' ? 'active' : '' ?>">
-                    <a href="admin_home.php">Home</a>
-                </p>
-                <p class="<?= $currentPage == 'service' ? 'active' : '' ?>">
-                    <a href="service.php">Service</a>
-                </p>
-                <p class="<?= $currentPage == 'user' ? 'active' : '' ?>">
-                    <a href="user.php">User</a>
-                </p>
-                <p class="<?= $currentPage == 'applicant' ? 'active' : '' ?>">
-                    <a href="applicant.php">Applicant</a>
-                </p>
-              
-                <p class="<?= $currentPage == 'helpline' ? 'active' : '' ?>">
-                    <a href="helpline.php">Helpline</a>
-                </p>
-                <p class="<?= $currentPage == 'feedback' ? 'active' : '' ?>">
-                    <a href="feedback.php">Feedback</a>
-                </p>
-            </div>
+           <div class="panel-ops">
+    <p class="<?= $currentPage == 'admin_home' ? 'active' : '' ?>">
+        <a href="admin_home.php" class="panel-menu">Home</a>
+    </p>
+    <p class="<?= $currentPage == 'service' ? 'active' : '' ?>">
+        <a href="service.php" class="panel-menu">Service</a>
+    </p>
+    <p class="<?= $currentPage == 'user' ? 'active' : '' ?>">
+        <a href="user.php" class="panel-menu">User</a>
+    </p>
+    <p class="<?= $currentPage == 'applicant' ? 'active' : '' ?>">
+        <a href="applicant.php" class="panel-menu">Applicant</a>
+    </p>
+    <p class="<?= $currentPage == 'feedback' ? 'active' : '' ?>">
+        <a href="feedback.php" class="panel-menu">Feedback</a>
+    </p>
+</div>
+
 
             <div class="panel-logo border">
                 <div class="panel-logo-link"></div>
@@ -144,7 +146,7 @@ $result = $conn->query($sql);
         </div>
 
         <div class="admin-body">
-            <h2>User Management</h2>
+            <h2 class="service-heading">User Management</h2>
             <table id="userTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -206,9 +208,7 @@ $result = $conn->query($sql);
   	 		</div>
   	 	</div>
   	 </div>
-  </footer>
-
-   
+  </footer> 
 
 </div>
 

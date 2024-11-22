@@ -36,6 +36,7 @@ if (isset($_SESSION['user_email'])) {
 // Fetch services data dynamically for the "Education" sector
 $query = "
     SELECT 
+    service.service_id,
         service.service_name, 
         service_sector.sector_name, 
         service_sector.description AS sector_description, 
@@ -92,20 +93,24 @@ if ($result && $result->num_rows > 0) {
         </div>
 
         <div class="nav-signin border">
-        <?php if ($logged_in_user): ?>
+    <?php if ($logged_in_user): ?>
+        <a href="profile.php?user_id=<?= htmlspecialchars($logged_in_user['user_id']) ?>" class="profile-link">
             <p class="login-">
-                <span class="user-name"><?= $logged_in_user['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_user['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
+                <span class="user-name"><?= htmlspecialchars($logged_in_user['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_user['mail']) ?></span>
             </p>
-        <?php elseif ($logged_in_admin): ?>
+        </a>
+    <?php elseif ($logged_in_admin): ?>
+        <a href="profile.php?admin_id=<?= htmlspecialchars($logged_in_admin['admin_id']) ?>" class="profile-link">
             <p class="login-">
-                <span class="user-name"><?= $logged_in_admin['name'] ?></span><br>
-                <span class="user-email"><?= $logged_in_admin['mail'] ?></span> <!-- Updated 'email' to 'mail' -->
+                <span class="user-name"><?= htmlspecialchars($logged_in_admin['name']) ?></span><br>
+                <span class="user-email"><?= htmlspecialchars($logged_in_admin['mail']) ?></span>
             </p>
-        <?php else: ?>
-            <a href="login.php">Login</a>
-        <?php endif; ?>
-        </div>
+        </a>
+    <?php else: ?>
+        <a href="login.php">Login</a>
+    <?php endif; ?>
+  </div>
 
         <div class="nav-second border">
             <p><span>Date</span></p>
@@ -145,13 +150,13 @@ if ($result && $result->num_rows > 0) {
            <?php
             $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
             ?>
-            <div class="panel-ops">
-                <p class="<?= $currentPage == 'index' ? 'active' : '' ?>"><a href="index.php">Home</a></p>
-                <p class="<?= $currentPage == 'education' ? 'active' : '' ?>"><a href="education.php">Education</a></p>
-                <p class="<?= $currentPage == 'health' ? 'active' : '' ?>"><a href="health.php">Health</a></p>
-                <p class="<?= $currentPage == 'agriculture' ? 'active' : '' ?>"><a href="agriculture.php">Agriculture</a></p>
-                <p class="<?= $currentPage == 'finance' ? 'active' : '' ?>"><a href="finance.php">Finance</a></p>
-                <p class="<?= $currentPage == 'transport' ? 'active' : '' ?>"><a href="transport.php">Transport</a></p>
+             <div class="panel-ops">
+                <p class="<?= $currentPage == 'index' ? 'active' : '' ?>"><a href="index.php", class="panel-menu">Home</a></p>
+                <p class="<?= $currentPage == 'education' ? 'active' : '' ?>"><a href="education.php", class="panel-menu">Education</a></p>
+                <p class="<?= $currentPage == 'health' ? 'active' : '' ?>"><a href="health.php", class="panel-menu">Health</a></p>
+                <p class="<?= $currentPage == 'agriculture' ? 'active' : '' ?>"><a href="agriculture.php", class="panel-menu">Agriculture</a></p>
+                <p class="<?= $currentPage == 'finance' ? 'active' : '' ?>"><a href="finance.php", class="panel-menu">Finance</a></p>
+                <p class="<?= $currentPage == 'transport' ? 'active' : '' ?>"><a href="transport.php", class="panel-menu">Transport</a></p>
             </div>
 
 
@@ -174,7 +179,7 @@ if ($result && $result->num_rows > 0) {
 
                 <div class="app">
                     <main class="content">
-                        <h2>Education Services</h2>
+                        <h2 class="service-heading">Transport Services</h2>
                         <div class="service-container">
                             <?php if (!empty($services)): ?>
                                 <?php foreach ($services as $service): ?>
@@ -189,7 +194,7 @@ if ($result && $result->num_rows > 0) {
                                                 Need help? Call - <?= $service['phone']; ?>
                                             </div>
                                             <div class="service-item">
-                                                <a href="form.php" class="apply-btn">Apply</a>
+                                                <a href="form.php?service_id=<?= $service['service_id']; ?>" class="apply-btn">Apply</a>
                                             </div>
                                         </nav>
                                     </div>

@@ -1,3 +1,5 @@
+
+
 <?php
 include 'config.php';
 session_start();
@@ -24,24 +26,38 @@ if (isset($_SESSION['user_email'])) {
     die("Error: User not logged in.");
 }
 
-// Validate service_id from GET or use a default value
-if (isset($_GET['service_id'])) {
-    $service_id = $_GET['service_id'];
-} else {
-    $service_id = 1; // Default service ID for testing
+// // if (isset($_GET['service_id'])) {
+// //     $service_id = $_GET['service_id'];
+// //     echo "<script>console.log('Service ID: $service_id');</script>";
+// // } else {
+// //     die("Error: Service ID not provided.");
+// // }
+
+// // Get the service_id from the URL
+// $service_id = isset($_GET['service_id']) ? intval($_GET['service_id']) : 0;
+$service_id = isset($_GET['service_id']) ? intval($_GET['service_id']) : 0;
+
+if ($service_id === 0) {
+    error_log("Service ID not provided or invalid.");
+    echo "<script>console.error('Error: Service ID not provided or invalid.');</script>";
+    // You can redirect the user or show a user-friendly message here instead of terminating the script.
 }
 
-// Fetch service details
+
+
 $sql = "SELECT * FROM service WHERE service_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $service_id);
 $stmt->execute();
 $result = $stmt->get_result();
+$comment = null;
+
 if ($result->num_rows > 0) {
     $service = $result->fetch_assoc();
 } else {
-    die("Error: Service not found.");
+    die("Error: Service not found. Check service_id: $service_id");
 }
+
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -54,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nationality = $_POST['nationality'];
     $gender = $_POST['gender'];
     $mail = $_POST['mail'];
+    $comment = $_POST['comment'];
 
     // Insert into form table
     $form_sql = "INSERT INTO form (form_name, service_id, first_name, last_name, phone, education, address, nationality, gender, mail) 
@@ -71,8 +88,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insert into applicant table
         $applicant_sql = "INSERT INTO applicant (status) VALUES ('Pending')";
 
+
+
+
+
+
         if ($conn->query($applicant_sql)) {
             $applicant_id = $conn->insert_id;
+
+            // Insert into feedback table
+    $feedback_sql = "INSERT INTO feedback (applicant_id, comments) VALUES (?, ?)";
+    $feedback_stmt = $conn->prepare($feedback_sql); // Create a new prepared statement
+    if ($feedback_stmt) {
+        $feedback_stmt->bind_param("is", $applicant_id, $comment); // Bind the correct parameters
+        if (!$feedback_stmt->execute()) {
+            echo "<script>alert('Error inserting into feedback: " . $feedback_stmt->error . "');</script>";
+        }
+    } else {
+        echo "<script>alert('Error preparing feedback SQL: " . $conn->error . "');</script>";
+    }
+
 
             // Insert into application table
             $user_id = $_SESSION['user_id']; // Use session-stored user_id
@@ -245,6 +280,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($logged_in_user): ?>
             <span class="auto-fill" onclick="autoFill()">Use logged-in user info</span>
         <?php endif; ?>
+
+        <label for="comment">Comment</label>
+        <input type="text" name="comment" id="comment" placeholder="We are looking for your valuable feedback.(optional)">
+
 
         <div class="btn-group">
             <button type="submit">Submit</button>
