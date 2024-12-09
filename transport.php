@@ -133,11 +133,20 @@ if ($result && $result->num_rows > 0) {
 			<h3>Menu</h3>
 			
 			<nav class="menu">
-				<a href="#" class="menu-item is-active home">Home</a>
-                <a href="#" class="menu-item profile">Profile</a>
-				<a href="#" class="menu-item about">About</a>			
-				<a href="#" class="menu-item contact">Contact</a>
-                <a href="#" class="menu-item log-out">Log out</a>
+				<a href="index.php" class="menu-item is-active home">Home</a>
+                <!-- for profile -->
+                 <!-- Display Profile link for user -->
+        <?php if (isset($logged_in_user)): ?>
+            <a href="profile.php?user_id=<?= $logged_in_user['user_id'] ?>" class="menu-item profile">Profile</a>
+        
+        <!-- Display Profile link for admin -->
+        <?php elseif (isset($logged_in_admin)): ?>
+            <a href="profile.php?admin_id=<?= $logged_in_admin['admin_id'] ?>" class="menu-item profile">Profile</a>
+        <?php endif; ?>
+				<a href="about.php" class="menu-item about">About</a>			
+				<a href="helpline.php" class="menu-item contact">Contact</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
 			</nav>
 
 		</aside>

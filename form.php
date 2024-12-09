@@ -204,12 +204,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<aside class="sidebar">
 			<h3>Menu</h3>
 			
-			<nav class="menu">
+            <nav class="menu">
 				<a href="#" class="menu-item is-active home">Home</a>
-                <a href="#" class="menu-item profile">Profile</a>
+                <!-- for profile -->
+                <?php if (isset($user_id)): ?>
+                    <a href="profile.php?user_id=<?= $user_id ?>" class="menu-item profile">Profile</a>
+                <?php elseif (isset($admin_id)): ?>
+                    <a href="profile.php?admin_id=<?= $admin_id ?>" class="menu-item profile">Profile</a>
+                <?php endif; ?>
+
 				<a href="#" class="menu-item about">About</a>			
 				<a href="#" class="menu-item contact">Contact</a>
-                <a href="#" class="menu-item log-out">Log out</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
 			</nav>
 
 		</aside>

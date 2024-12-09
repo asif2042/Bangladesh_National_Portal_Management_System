@@ -127,8 +127,8 @@ if (isset($_SESSION['user_email'])) {
                     <a href="profile.php?admin_id=<?= $admin_id ?>" class="menu-item profile">Profile</a>
                 <?php endif; ?>
 
-				<a href="#" class="menu-item about">About</a>			
-				<a href="#" class="menu-item contact">Contact</a>
+				<a href="about.php" class="menu-item about">About</a>			
+				<a href="helpline.php" class="menu-item contact">Contact</a>
                 <a href="logout.php" class="menu-item log-out">Log out</a>
 
 			</nav>

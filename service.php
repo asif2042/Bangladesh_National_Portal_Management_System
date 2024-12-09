@@ -110,14 +110,20 @@ $result = $conn->query($sql);
     </div>
     <aside class="sidebar">
     <h3>Menu</h3>
-        <nav class="menu">
-            <a href="#" class="menu-item is-active home">Home</a>
-            <a href="#" class="menu-item profile">Profile</a>
-            <a href="#" class="menu-item about">About</a>
-            <a href="#" class="menu-item contact">Contact</a>
-            <a href="logout.php" class="menu-item log-out">Log out</a>
+    <nav class="menu">
+				<a href="admin_home.php" class="menu-item is-active home">Home</a>
+                <!-- for profile -->
+                <?php if (isset($user_id)): ?>
+                    <a href="profile.php?user_id=<?= $user_id ?>" class="menu-item profile">Profile</a>
+                <?php elseif (isset($admin_id)): ?>
+                    <a href="profile.php?admin_id=<?= $admin_id ?>" class="menu-item profile">Profile</a>
+                <?php endif; ?>
 
-        </nav>
+				<a href="about.php" class="menu-item about">About</a>			
+				<a href="helpline.php" class="menu-item contact">Contact</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
+			</nav>
     </aside>
 
     <main class="content">

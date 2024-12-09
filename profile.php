@@ -77,18 +77,37 @@ if (isset($_GET['user_id'])) {
         </div>
     </div>
     <aside class="sidebar">
-        <h3>Menu</h3>
-        <nav class="menu">
-            <a href="admin_home.php" class="menu-item is-active home">Home</a>
-            <a href="#" class="menu-item profile">Profile</a>
-            <a href="about.php" class="menu-item about">About</a>
-            <a href="contact.php" class="menu-item contact">Contact</a>
-            <a href="logout.php" class="menu-item log-out">Log out</a>
-        </nav>
-    </aside>
+			<h3>Menu</h3>
+			
+			<nav class="menu">
+
+                  <!-- Display index.php link for user -->
+                  <?php if (isset($logged_in_user)): ?>
+            <a href="index.php?user_id=<?= $logged_in_user['user_id'] ?>" class="menu-item is-active home">Home</a>
+        
+        <!-- Display amdin_home.php link for admin -->
+        <?php elseif (isset($logged_in_admin)): ?>
+            <a href="admin_home.php?admin_id=<?= $logged_in_admin['admin_id'] ?>" class="menu-item is-active home">Home</a>
+        <?php endif; ?>
+                <!-- for profile -->
+                 <!-- Display Profile link for user -->
+        <?php if (isset($logged_in_user)): ?>
+            <a href="profile.php?user_id=<?= $logged_in_user['user_id'] ?>" class="menu-item profile">Profile</a>
+        
+        <!-- Display Profile link for admin -->
+        <?php elseif (isset($logged_in_admin)): ?>
+            <a href="profile.php?admin_id=<?= $logged_in_admin['admin_id'] ?>" class="menu-item profile">Profile</a>
+        <?php endif; ?>
+				<a href="#" class="menu-item about">About</a>			
+				<a href="helpline.php" class="menu-item contact">Contact</a>
+                <a href="logout.php" class="menu-item log-out">Log out</a>
+
+			</nav>
+
+		</aside>
     <main class="content">
         <div class="panel">
-        <div class="panel-ops">
+        <!-- <div class="panel-ops">
             <p class="<?= $currentPage == 'admin_home' ? 'active' : '' ?>">
                 <a href="admin_home.php" class="panel-menu">Home</a>
             </p>
@@ -104,7 +123,7 @@ if (isset($_GET['user_id'])) {
             <p class="<?= $currentPage == 'feedback' ? 'active' : '' ?>">
               <a href="feedback.php" class="panel-menu">Feedback</a>
             </p>
-        </div>
+        </div> -->
             <div class="panel-logo border">
                 <div class="panel-logo-link"></div>
             </div>
